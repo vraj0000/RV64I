@@ -1,10 +1,8 @@
 # RV64I Processor Modules
-========================
 
 This repository contains Verilog modules for a simple RV64I processor, designed to implement key components of the RISC-V RV64I instruction set architecture. The project is a work in progress, and additional features will be added over time.
 
 ## Current Features
------------------
 - **ALU**: Supports arithmetic, logical, shift, and comparison operations.
 - **Register File**: Implements 32 registers with write bypassing and hardwired `x0`.
 - **Fetch Unit**: Handles program counter updates and instruction fetching.
@@ -13,14 +11,13 @@ This repository contains Verilog modules for a simple RV64I processor, designed 
 - **Control Unit**: Connects all modules and manages instruction flow.
 
 ## Planned Features
------------------
 - **Load/Store Unit**: To handle memory operations (`LOAD` and `STORE` instructions).
 - **Branch Unit**: To evaluate branch conditions and update the program counter.
 - **Integration**: Connecting all modules into a complete RV64I processor pipeline.
 
 ## Repository Structure
----------------------
-rv64i-processor/
+```
+RV64I/
 ├── src/                # Source files
 │   ├── alu.v           # ALU module
 │   ├── regfile.v       # Register file module
@@ -33,9 +30,8 @@ rv64i-processor/
 │   ├── regfile_tb.v    # Register file testbench
 ├── memory.hex          # Memory initialization file
 └── README.txt          # Project documentation
-
+```
 ## Getting Started
----------------
 To get started with this project, follow these steps:
 
 1. Clone the repository:
