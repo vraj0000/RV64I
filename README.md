@@ -44,7 +44,11 @@ rv64i-processor/
 │   ├── control.v       # Control unit
 ├── testbench/          # Testbench files
 │   ├── alu_tb.v        # ALU testbench
-│   ├── regfile_tb.v    # Register file testbench
+│   ├── reg_tb.v        # Register file testbench
+|   ├── control_tb.v    # Control file testbench
+|   ├── decode_tb.v     # Decode file testbench
+|   ├── fetch_tb.v      # Fetch file testbench
+|   ├── memory_tb.v     # Memory file testbench
 ├── memory.hex          # Memory initialization file
 └── README.txt          # Project documentation
 ```
