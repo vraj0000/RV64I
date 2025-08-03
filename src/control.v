@@ -44,6 +44,11 @@ module control #(
     
     wire zero;                     // Zero output from ALU
 
+    // Load/Store connections
+    wire [MEM_WIDTH-1:0] data_mem_addr, data_mem_wdata, data_mem_rdata;
+    wire [MEM_WIDTH/8-1:0] data_mem_we;
+    wire [MEM_WIDTH-1:0] load_data;
+
     
     //==========================================================================
     // Instruction Type Decode Signals (Only ALU operations)
@@ -53,6 +58,8 @@ module control #(
     wire isLUI     = (OPCODE[6:2] == 5'b01101);  // rd <- Uimm
     wire isAUIPC   = (OPCODE[6:2] == 5'b00101);  // rd <- PC + Uimm
     wire isBranch  = (OPCODE[6:2] == 5'b11000);
+    wire isLoad    = (OPCODE[6:2] == 5'b00000); // rd <- mem[rs1+Iimm]
+    wire isStore   = (OPCODE[6:2] == 5'b01000);
     
     //==========================================================================
     // Control Signal Generation
@@ -61,8 +68,11 @@ module control #(
     // ALU source selection: 1 = immediate, 0 = register
     wire alu_src = isALUimm | isAUIPC;
     
-    // Register write enable (only for ALU operations)
-    wire reg_we = isALUimm | isALUreg | isLUI | isAUIPC;
+    // Register write enable (include load operations)
+    wire reg_we = isALUimm | isALUreg | isLUI | isAUIPC | isLoad;
+    
+    // Register file write data selection
+    wire [MEM_WIDTH-1:0] reg_wdata = isLoad ? load_data : alu_result;
     
     //==========================================================================
     // Data Path Connections
@@ -105,13 +115,32 @@ module control #(
     //==========================================================================
     decode decode_unit(
         .instr(instr),
-        .RS1(RS1),
-        .RS2(RS2),
-        .RD(RD),
-        .OPCODE(OPCODE),
-        .FUNCT3(FUNCT3),
-        .FUNCT7(FUNCT7),
-        .IMM(IMM)   
+        .rs1(RS1),
+        .rs2(RS2),
+        .rd(RD),
+        .opcode(OPCODE),
+        .funct3(FUNCT3),
+        .funct7(FUNCT7),
+        .imm(IMM)   
+    );
+    
+    //==========================================================================
+    // Load/Store Unit Instance
+    //==========================================================================
+    load_store #(
+        .WIDTH(MEM_WIDTH)
+    ) i_load_store (
+        .isLoad(isLoad),
+        .isStore(isStore),
+        .funct3(FUNCT3),
+        .rs1_data(a),
+        .rs2_data(b_reg),
+        .imm(imm_64),
+        .mem_rdata(data_mem_rdata),
+        .mem_we(data_mem_we),
+        .mem_addr(data_mem_addr),
+        .mem_wdata(data_mem_wdata),
+        .load_data(load_data)
     );
     
     //==========================================================================
@@ -123,9 +152,9 @@ module control #(
     ) i_regfile (
         .clk        (clk),
         .rst        (~rst_n),           // Convert to active-high for regfile
-        .we         (reg_we), // Use pipelined write enable
-        .waddr      (RD),   // Use pipelined write address
-        .wdata      (alu_result),   // Use pipelined write data
+        .we         (reg_we),           // Include loads in write enable
+        .waddr      (RD),   
+        .wdata      (reg_wdata),        // MUX between ALU result and load data
         .raddr1     (RS1),
         .raddr2     (RS2),
         .rdata1     (a),
@@ -159,6 +188,24 @@ module control #(
         .pc(pc),
         .pc_target(branch_target),
         .branch_taken(branch_taken)
+    );
+    
+    //==========================================================================
+    // Data Memory Instance
+    //==========================================================================
+    data_memory #(
+        .DEPTH(MEM_DEPTH),
+        .WIDTH(MEM_WIDTH),
+        .ADDR_WIDTH(ADDR_WIDTH),
+        .INIT_FILE("data.hex")
+    ) i_data_memory (
+        .clk(clk),
+        .rst(~rst_n),
+        .d_addr(data_mem_addr[ADDR_WIDTH-1:0]),
+        .d_wdata(data_mem_wdata),
+        .d_we(data_mem_we),
+        .d_re(isLoad),
+        .d_rdata(data_mem_rdata)
     );
     
     //==========================================================================
