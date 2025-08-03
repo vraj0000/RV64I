@@ -15,13 +15,13 @@ This processor successfully executes real RISC-V assembly programs with complete
 
 ## Implemented Features
 
-✅ **Instruction Fetch** - PC management and instruction retrieval
-✅ **Instruction Decode** - Full RISC-V instruction parsing  
-✅ **Register File** - 32 x 64-bit registers with x0 hardwired to zero
-✅ **ALU** - Arithmetic, logical, shift, and comparison operations
-✅ **Load/Store Unit** - Complete memory operations (LB/LH/LW/LD/LBU/LHU/LWU/SB/SH/SW/SD)
-✅ **Memory Subsystem** - Instruction + data memories with hex file initialization
-✅ **Control Unit** - Orchestrates execution across all functional units
+- ✅ **Instruction Fetch** - PC management and instruction retrieval
+- ✅ **Instruction Decode** - Full RISC-V instruction parsing  
+- ✅ **Register File** - 32 x 64-bit registers with x0 hardwired to zero
+- ✅ **ALU** - Arithmetic, logical, shift, and comparison operations
+- ✅ **Load/Store Unit** - Complete memory operations (LB/LH/LW/LD/LBU/LHU/LWU/SB/SH/SW/SD)
+- ✅ **Memory Subsystem** - Instruction + data memories with hex file initialization
+- ✅ **Control Unit** - Orchestrates execution across all functional units
 
 ## Module Structure
 control.v       - Top-level processor control unit
