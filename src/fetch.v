@@ -26,10 +26,11 @@ module fetch #(
     
     assign mem_addr = pc[ADDR_WIDTH+2:3];
     assign mem_re = 1'b1;
-    wire [31:0] raw_word = pc[2] ? mem_rdata[31:0] : mem_rdata[63:32];
+    wire [31:0] raw_word = pc[2] ? mem_rdata[63:32] : mem_rdata[31:0];
     assign instr = {raw_word[7:0], raw_word[15:8], raw_word[23:16], raw_word[31:24]};
 
      always @(*) begin
+        $display("-----------------------------------------------------------------------");
         $display("Fetch Debug - PC: 0x%08h, Instruction: 0x%08h", pc, instr);
         end
 

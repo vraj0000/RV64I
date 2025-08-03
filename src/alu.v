@@ -1,9 +1,11 @@
-module alu (
-    input wire [63:0] a,        // Changed to 64-bit for RV64I
-    input wire [63:0] b,        // Changed to 64-bit for RV64I
+module alu #(
+ parameter XLEN = 64
+)(
+    input wire [XLEN-1:0] a,        // Changed to 64-bit for RV64I
+    input wire [XLEN-1:0] b,        // Changed to 64-bit for RV64I
     input wire [2:0] funct3,    // Changed to 3 bits (was 4)
     input wire [6:0] funct7,
-    output reg [63:0] result,   // Must be reg for always block
+    output reg [XLEN-1:0] result,   // Must be reg for always block
     output wire zero
 );
 
@@ -34,5 +36,10 @@ module alu (
     end
 
     assign zero = (result == 64'h0);
+
+    always @(a, b, funct3, funct7) begin
+        #1
+        $display("A = 0x%016h, B = 0x%016h, Result = 0x%016h", a, b, result);
+    end
 
 endmodule
