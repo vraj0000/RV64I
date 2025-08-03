@@ -1,54 +1,45 @@
 # RV64I RISC-V Processor
 
-A complete 64-bit RISC-V processor implementation in Verilog supporting the RV64I instruction set architecture.
+Complete 64-bit RISC-V processor in Verilog. Executes real RV64I assembly programs.
 
-## Status: FULLY FUNCTIONAL
-
-This processor successfully executes real RISC-V assembly programs with complete load/store, ALU, and memory operations.
+STATUS: WORKING
 
 ## Architecture
 
-- **64-bit Harvard Architecture** - Separate instruction and data memories
-- **Single-cycle execution** - Instructions complete in one clock cycle
-- **Modular design** - Clean separation of functional units
-- **RV64I ISA compliance** - Implements RISC-V 64-bit integer instruction set
+- 64-bit Harvard architecture (separate instruction/data memory)
+- Single-cycle execution
+- Modular design
+- RV64I instruction set
 
-## Implemented Features
+## Modules
 
-- ✅ **Instruction Fetch** - PC management and instruction retrieval
-- ✅ **Instruction Decode** - Full RISC-V instruction parsing  
-- ✅ **Register File** - 32 x 64-bit registers with x0 hardwired to zero
-- ✅ **ALU** - Arithmetic, logical, shift, and comparison operations
-- ✅ **Load/Store Unit** - Complete memory operations (LB/LH/LW/LD/LBU/LHU/LWU/SB/SH/SW/SD)
-- ✅ **Memory Subsystem** - Instruction + data memories with hex file initialization
-- ✅ **Control Unit** - Orchestrates execution across all functional units
+- control.v       - Top-level control unit
+- fetch.v         - Instruction fetch + PC
+- decode.v        - Instruction decode
+- regfile.v       - 32x64-bit register file
+- alu.v           - Arithmetic logic unit
+- load_store.v    - Memory operations
+- memory.v        - Instruction memory
+- data_memory.v   - Data memory
 
-## Module Structure
-control.v       - Top-level processor control unit
-fetch.v         - Instruction fetch and PC management
-decode.v        - Instruction decode logic
-regfile.v       - 32-register file implementation
-alu.v           - Arithmetic logic unit
-load_store.v    - Memory operation handling
-memory.v        - Instruction memory module
-data_memory.v   - Data memory module
+## Features
 
-## Verification
-
-The processor has been verified with real RISC-V assembly programs demonstrating:
-- Immediate arithmetic operations
-- Memory store/load operations
-- ALU operations on memory-loaded data
-- Complete data flow from memory through ALU back to memory
+- [✓] Instruction fetch and decode
+- [✓] 32 registers (x0 hardwired to 0)
+- [✓] ALU operations (add, sub, and, or, xor, sll, srl, sra, slt, sltu)
+- [✓] Load/store operations (LB/LH/LW/LD/LBU/LHU/LWU/SB/SH/SW/SD)
+- [✓] Memory subsystem with hex file loading
+- [✓] Complete datapath integration
 
 ## Usage
 
-1. Compile RISC-V assembly to machine code
-2. Initialize memory.hex with instruction codes
-3. Initialize data.hex with data values (optional)
-4. Run simulation with provided testbench
+1. Assemble RISC-V code to machine code
+2. Put instructions in memory.hex
+3. Put data in data.hex (optional)
+4. Run simulation
 
-## Example Program
+## Test Program
+
 ```
 .section .text
 .global _start
@@ -83,3 +74,25 @@ _start:
     nop
     nop
 ```
+
+Results: Successfully stores, loads, computes, and verifies data.
+
+## TODO
+
+Pipeline Implementation (6 stages):
+- Stage 1: Fetch
+- Stage 2: Decode  
+- Stage 3: Execute (ALU/Branch/Load-Store)
+- Stage 4: Memory
+- Stage 5: Writeback
+- Stage 6: Commit
+
+Pipeline additions needed:
+- Pipeline registers between stages
+- Hazard detection unit
+- Data forwarding network
+- Branch prediction
+- Stall/flush control
+
+Current: Single-cycle processor
+Target: Pipelined processor with ~1 IPC
