@@ -11,7 +11,7 @@ This repository contains Verilog modules for a simple RV64I processor, designed 
 - ✅ **Decode Unit**: Decodes RISC-V instructions into their components.
 - 🌌 **Load/Store Unit**: To handle memory operations (`LOAD` and `STORE` instructions).
 - 🌌 **Branch Unit**: To evaluate branch conditions and update the program counter.
-- 🌌 **Integration**: Connect ALU to Decode Unit and complete the processor pipeline.
+- ✅ **Integration**: Connect ALU to Decode Unit and complete the processor pipeline.
 
 ---
 
